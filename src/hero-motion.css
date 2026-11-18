@@ -1,0 +1,48 @@
+/* The outer scene owns scroll zoom; its children own independent idle motion. */
+.hero-art {
+  --hero-base-scale: 1;
+  transform: scale(calc(var(--hero-base-scale) * (1 + var(--hero-scroll, 0) * .28)));
+  transform-origin: 50% 50%;
+}
+.hero-copy { transform: none; opacity: 1; will-change: auto; }
+.hero-art .ribbon {
+  animation: ribbon-idle 9s ease-in-out infinite;
+  transform-origin: 50% 48%;
+}
+.hero-art .orbit-one { animation: orbit-idle-one 24s linear infinite; }
+.hero-art .orbit-two { animation: orbit-idle-two 32s linear infinite; }
+.hero-art .halo { animation: halo-breathe 7s ease-in-out infinite; }
+.hero-art .label-top { translate: none; animation: label-idle-top 7s ease-in-out infinite; }
+.hero-art .label-bottom { translate: none; animation: label-idle-bottom 8s ease-in-out infinite; }
+.hero-art :is(.ribbon, .orbit-one, .orbit-two, .halo, .label-top, .label-bottom) { animation-play-state: paused; }
+.hero.is-animating .hero-art :is(.ribbon, .orbit-one, .orbit-two, .halo, .label-top, .label-bottom) { animation-play-state: running; }
+@keyframes ribbon-idle {
+  0%, 100% { transform: translateY(0) rotate(-10deg) rotateY(-18deg); }
+  50% { transform: translateY(-16px) rotate(-5deg) rotateY(14deg); }
+}
+@keyframes orbit-idle-one {
+  from { transform: rotateX(55deg) rotateY(-12deg) rotateZ(-28deg); }
+  to { transform: rotateX(55deg) rotateY(-12deg) rotateZ(332deg); }
+}
+@keyframes orbit-idle-two {
+  from { transform: rotateX(30deg) rotateY(40deg) rotateZ(25deg); }
+  to { transform: rotateX(30deg) rotateY(400deg) rotateZ(-335deg); }
+}
+@keyframes halo-breathe {
+  0%, 100% { transform: scale(.94); opacity: .7; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes label-idle-top {
+  0%, 100% { transform: translateY(0) rotate(6deg); }
+  50% { transform: translateY(-9px) rotate(3deg); }
+}
+@keyframes label-idle-bottom {
+  0%, 100% { transform: translateY(-5px) rotate(-5deg); }
+  50% { transform: translateY(6px) rotate(-2deg); }
+}
+@media (max-width: 1000px) { .hero-art { --hero-base-scale: .84; } }
+@media (max-width: 700px) { .hero-art { --hero-base-scale: .82; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-art { transform: scale(var(--hero-base-scale)) !important; will-change: auto; }
+  .hero-art :is(.ribbon, .orbit-one, .orbit-two, .halo, .label-top, .label-bottom) { animation: none !important; }
+}
